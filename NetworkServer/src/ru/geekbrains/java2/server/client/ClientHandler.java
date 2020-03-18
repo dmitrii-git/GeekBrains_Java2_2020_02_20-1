@@ -59,11 +59,22 @@ public class ClientHandler {
     private void readMessages() throws IOException {
         while (true) {
             String message = in.readUTF();
-            System.out.printf("От %s: %s%n", nickname, message);
-            if ("/end".equals(message)) {
-                return;
+
+            boolean isPrivate = message.startsWith("/w");
+            if (isPrivate) {
+                String[] messageParts = message.split("\\s");
+                networkServer.privateMessage(nickname + ": " + messageParts[2], "username2");
+                System.out.printf(String.format("Private от %s для %s: %s", nickname, messageParts[1], messageParts[2]));
             }
-            networkServer.broadcastMessage(nickname + ": " + message, this);
+            else {
+                System.out.printf("От %s: %s%n", nickname, message);
+                if ("/end".equals(message)) {
+                    return;
+                }
+                networkServer.broadcastMessage(nickname + ": " + message, this);
+
+            }
+
         }
     }
 

@@ -56,6 +56,14 @@ public class NetworkServer {
         }
     }
 
+    public synchronized void privateMessage(String message, String toClient) throws IOException {
+       for (ClientHandler client : clients) {
+           if (client.toString().equals(toClient)) {
+                client.sendMessage(message);
+            }
+        }
+    }
+
     public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
     }
